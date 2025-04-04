@@ -45,13 +45,14 @@ class DxfTag:
         
     # --- METODI PUBBLICI ---
     
-    def generate_single_tag(self, number, high=250, holes=False, radius = 5, dxf_file_name=None):
+    @staticmethod
+    def generate_single_tag(digit, height=250, holes=False, radius = 5, dxf_file_name=None):
         """
         Genera e salva una singola targa numerata
         
         Args:
             number: Il numero da visualizzare sulla targa
-            high: Altezza della targa in unità DXF
+            height: Altezza della targa in unità DXF
             holes: Se True, aggiunge i fori agli angoli della targa
             radius: Raggio dei fori in unità DXF (default: 5)
             dxf_file_name: Nome del file DXF da salvare. Se None, usa il numero come nome
@@ -60,24 +61,24 @@ class DxfTag:
             Il percorso del file salvato
         """
         doc = ezdxf.new()
-        digit = DxfTag(number, high, holes=holes, radius=radius)
-        digit.generate_plate(doc)
-        
+        digit_obj = DxfTag(digit, height, holes=holes, radius=radius)
+        digit_obj.generate_plate(doc)
+            
         if dxf_file_name is None:
-            dxf_file_name = f"{str(number)}.dxf"
-        
+            dxf_file_name = f"{str(digit)}.dxf"
+            
         doc.saveas(dxf_file_name)
         return dxf_file_name
     
     @staticmethod
-    def generate_tag_sequence(start, end, high=250, holes=False, radius=5, prefix=""):
+    def generate_tag_sequence(start, end, height=250, holes=False, radius=5, prefix=""):
         """
         Genera e salva una sequenza numerata di targhe
         
         Args:
             start: Numero iniziale della sequenza
             end: Numero finale della sequenza (incluso)
-            high: Altezza delle targhe in unità DXF
+            height: Altezza delle targhe in unità DXF
             holes: Se True, aggiunge i fori agli angoli delle targhe
             radius: Raggio dei fori in unità DXF (default: 2)
             prefix: Prefisso per i nomi dei file
@@ -88,7 +89,7 @@ class DxfTag:
         file_generati = []
         for i in range(start, end + 1):
             doc = ezdxf.new()
-            digit = DxfTag(i, high, holes=holes, radius=radius)
+            digit = DxfTag(i, height, holes=holes, radius=radius)
             digit.generate_plate(doc)
             
             nome_file = f"{prefix}{str(i)}.dxf"
